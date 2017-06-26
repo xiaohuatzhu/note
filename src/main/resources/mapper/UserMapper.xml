@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
  "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <!-- UserMapper.xml 是 User的访问接口 -->
-<mapper namespace="cn.tedu.note.dao.UserDao">
+<mapper namespace="cn.tedu.note.dao.UserDao"> 
 
 	<resultMap type="user" id="UserMap">
 		<id column="cn_user_id" property="id" />
