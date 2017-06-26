@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.note.dao.NoteDao">
+	<resultMap type="note" id="NoteMap">
+		<id column="cn_note_id" property="id" />
+		<result column="cn_notebook_id" property="notebookId" />
+		<result column="cn_user_id" property="userId" />
+		<result column="cn_note_status_id" property="statusId" />
+		<result column="cn_note_type_id" property="typeId" />
+		<result column="cn_note_title" property="title" />
+		<result column="cn_note_body" property="body" />
+		<result column="cn_note_create_time" property="createTime" />
+		<result column="cn_note_last_modify_time" property="lastModifyTime" />
+	</resultMap>
+
+	<insert id="addNote" parameterType="note">
+		INSERT INTO
+		CN_NOTE
+		VALUES(
+		#{id},
+		#{notebookId},
+		#{userId},
+		#{statusId},
+		#{typeId},
+		#{title},
+		#{body},
+		floor(timestampdiff(microsecond,'1970-01-01 00:00:00',now(3))/1000),
+		floor(timestampdiff(microsecond,'1970-01-01 00:00:00',now(3))/1000)
+		)
+	</insert>
+
+	<select id="findNotesByNotebookId" parameterType="string"
+		resultType="map">
+		SELECT
+		CN_NOTE_ID AS id,
+		CN_NOTE_TITLE AS title
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTEBOOK_ID=#{notebookId} AND CN_NOTE_STATUS_ID='1'
+		ORDER BY
+		CN_NOTE_LAST_MODIFY_TIME DESC
+	</select>
+
+	<select id="findDeleteNotes" parameterType="string" resultType="map">
+		SELECT
+		CN_NOTE_ID AS id,
+		CN_NOTEBOOK_ID AS notebookId,
+		CN_NOTE_TITLE AS
+		title
+		FROM
+		CN_NOTE
+		WHERE
+		CN_USER_ID=#{userId} AND CN_NOTE_STATUS_ID='0'
+		ORDER BY
+		CN_NOTE_LAST_MODIFY_TIME DESC
+	</select>
+
+	<select id="findNoteBodyByNoteId" parameterType="string"
+		resultType="string">
+		SELECT
+		CN_NOTE_Body
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTE_ID=#{noteId}
+	</select>
+
+	<select id="findNoteByNoteId" parameterType="string" resultMap="NoteMap">
+		SELECT
+		*
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTE_ID=#{noteId}
+	</select>
+
+	<update id="updateNote" parameterType="note">
+		UPDATE CN_NOTE
+		<set>
+			<if test="notebookId != null"> cn_notebook_id=#{notebookId},</if>
+			<if test="userId != null"> cn_user_id=#{userId},</if>
+			<if test="statusId != null"> cn_note_status_id=#{statusId},</if>
+			<if test="typeId != null"> cn_note_type_id=#{typeId},</if>
+			<if test="title != null"> cn_note_title=#{title},</if>
+			<if test="body != null"> cn_note_body=#{body},</if>
+			<if test="createTime != null"> cn_note_create_time=#{createTime},</if>
+			cn_note_last_modify_time=floor(timestampdiff(microsecond,'1970-01-01
+			00:00:00',now(3))/1000)
+		</set>
+		WHERE
+		cn_note_id=#{id}
+	</update>
+
+	<delete id="deleteDelNote" parameterType="string">
+		DELETE FROM
+		CN_NOTE
+		WHERE
+		CN_NOTE_ID=#{noteId}
+	</delete>
+
+	<select id="countNotesByNoteId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTE_ID=#{noteId} AND CN_NOTE_STATUS_ID=#{status}
+	</select>
+
+	<select id="countNoteByTitleNotebookIdUserId" parameterType="note"
+		resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTE_TITLE=#{title} AND
+		CN_USER_ID=#{userId} AND CN_NOTEBOOK_ID=#{notebookId} AND
+		CN_NOTE_STATUS_ID='1'
+		<if test="id != null">
+			AND CN_NOTE_ID!=#{id}
+		</if>
+	</select>
+
+	<select id="countNoteByTitleNotebookId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTE_TITLE=#{title} AND
+		CN_NOTEBOOK_ID=#{notebookId} AND CN_NOTE_STATUS_ID='1'
+	</select>
+
+	<select id="countNoteByNotebookId" parameterType="string"
+		resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTEBOOK_ID=#{notebookId}
+		AND CN_NOTE_STATUS_ID='1'
+	</select>
+
+</mapper>

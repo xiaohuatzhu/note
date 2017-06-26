@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.note.dao.NotebookDao">
+	<resultMap type="notebook" id="NotebookMap">
+		<id column="cn_notebook_id" property="id" />
+		<result column="cn_user_id" property="userId" />
+		<result column="cn_notebook_type_id" property="typeId" />
+		<result column="cn_notebook_name" property="name" />
+		<result column="cn_notebook_desc" property="desc" />
+		<result column="cn_notebook_createtime" property="createTime" />
+	</resultMap>
+
+	<update id="updateNotebook" parameterType="notebook">
+		UPDATE
+		CN_NOTEBOOK
+		SET
+		<if test="userId != null">CN_USER_ID=#{userId},</if>
+		<if test="typeId != null">CN_NOTEBOOK_TYPE_ID=#{typeId},</if>
+		<if test="name != null">CN_NOTEBOOK_NAME=#{name},</if>
+		<if test="desc != null">CN_NOTEBOOK_DESC=#{desc},</if>
+		CN_NOTEBOOK_CREATETIME=CURRENT_TIMESTAMP
+		WHERE
+		CN_NOTEBOOK_ID=#{id}
+	</update>
+
+	<insert id="addNotebook" parameterType="notebook">
+		INSERT INTO
+		CN_NOTEBOOK
+		VALUES(
+		#{id},
+		#{userId},
+		#{typeId},
+		#{name},
+		#{desc},
+		CURRENT_TIMESTAMP
+		)
+	</insert>
+
+	<select id="findNotebooksByUserId" parameterType="string"
+		resultType="map">
+		SELECT
+		CN_NOTEBOOK_ID AS id,
+		CN_NOTEBOOK_NAME AS name
+		FROM
+		CN_NOTEBOOK
+		WHERE
+		CN_USER_ID=#{userId}
+		ORDER BY
+		CN_NOTEBOOK_CREATETIME
+		DESC
+	</select>
+	<select id="findNotebookByNotebookId" parameterType="string"
+		resultMap="NotebookMap">
+		SELECT
+		CN_NOTEBOOK_ID,
+		CN_USER_ID,
+		CN_NOTEBOOK_TYPE_ID,
+		CN_NOTEBOOK_NAME,
+		CN_NOTEBOOK_DESC,
+		CN_NOTEBOOK_CREATETIME
+		FROM
+		CN_NOTEBOOK
+		WHERE
+		CN_NOTEBOOK_ID=#{notebookId}
+	</select>
+
+	<select id="countNotebooks" parameterType="string" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTEBOOK
+		WHERE
+		CN_NOTEBOOK_ID=#{notebookId}
+	</select>
+
+	<select id="countNotebookByNotebookIdUserId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTEBOOK
+		WHERE
+		CN_NOTEBOOK_ID=#{notebookId} AND
+		CN_USER_ID=#{userId}
+	</select>
+
+	<select id="countNotebookByNameUserId" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		CN_NOTEBOOK
+		WHERE
+		CN_NOTEBOOK_NAME=#{name} AND
+		CN_USER_ID=#{userId}
+	</select>
+
+	<delete id="deleteNotebookByNotebookId" parameterType="string">
+		DELETE
+		FROM CN_NOTEBOOK
+		WHERE CN_NOTEBOOK_ID=#{notebookId}
+	</delete>
+
+</mapper>

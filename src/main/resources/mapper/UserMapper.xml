@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- UserMapper.xml 是 User的访问接口 -->
+<mapper namespace="cn.tedu.note.dao.UserDao">
+
+	<resultMap type="user" id="UserMap">
+		<id column="cn_user_id" property="id" />
+		<result column="cn_user_name" property="name" />
+		<result column="cn_user_password" property="password" />
+		<result column="cn_user_token" property="token" />
+		<result column="cn_user_nick" property="nick" />
+	</resultMap>
+	
+	<select id="countUserByUserId" parameterType="string" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			CN_USER
+		WHERE
+			CN_USER_ID=#{userId}
+	</select>
+	<select id="findUserByName" parameterType="string" resultMap="UserMap">
+		SELECT
+			CN_USER_ID,
+			CN_USER_NAME,
+			CN_USER_PASSWORD,
+			CN_USER_TOKEN,
+			CN_USER_NICK
+		FROM
+			CN_USER
+		WHERE
+			CN_USER_NAME=#{name}
+	</select>
+	
+	<select id="findUserById" parameterType="string" resultMap="UserMap">
+		SELECT 
+			CN_USER_ID,
+			CN_USER_NAME,
+			CN_USER_PASSWORD,
+			CN_USER_TOKEN,
+			CN_USER_NICK
+		FROM
+			CN_USER
+		WHERE
+			CN_USER_ID=#{userId}
+	</select>
+	
+	<insert id="addUser" parameterType="user">
+		INSERT INTO CN_USER(
+			CN_USER_ID,
+			CN_USER_NAME,
+			CN_USER_PASSWORD,
+			CN_USER_TOKEN,
+			CN_USER_NICK
+		)VALUES(
+			#{id},
+			#{name},
+			#{password},
+			#{token},
+			#{nick}
+		)
+	</insert>
+	
+	<update id="modifyPasswordByUserId" >
+		UPDATE
+			CN_USER
+		SET
+			CN_USER_PASSWORD=#{password}
+		WHERE
+			CN_USER_NAME=#{name}
+	</update>
+	
+</mapper>

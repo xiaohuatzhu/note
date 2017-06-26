@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/edit.jsp=UTF-8
+encoding//src/main/webapp/alert/alert_delete_note.html=UTF-8
+encoding//src/main/webapp/alert/alert_delete_notebook.html=UTF-8
+encoding//src/main/webapp/alert/alert_delete_rollback.html=UTF-8
+encoding//src/main/webapp/alert/alert_error.html=UTF-8
+encoding//src/main/webapp/alert/alert_move.html=UTF-8
+encoding//src/main/webapp/alert/alert_note.html=UTF-8
+encoding//src/main/webapp/alert/alert_notebook.html=UTF-8
+encoding//src/main/webapp/alert/alert_rename.html=UTF-8
+encoding//src/main/webapp/alert/alert_replay.html=UTF-8
+encoding//src/main/webapp/alert/alert_success.html=UTF-8
+encoding//src/main/webapp/alert/alert_upload_note.html=UTF-8
+encoding//src/main/webapp/header-profile.html=UTF-8
+encoding/<project>=UTF-8
