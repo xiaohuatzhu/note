@@ -1,5 +1,7 @@
 // scripts/note.js , 编码 utf-8
 
+/** 笔记本每页的大小 */
+var notebookPageSize = 5;
 /** result为0,作业成功 */
 var SUCCESS = 0;
 /** result为1,作业成功 */
@@ -38,19 +40,33 @@ var delNotesLi = '<li class="online ">'
 		+ '<span class="delete_notes mt_cancel_select">取消</span>&nbsp;&nbsp;&nbsp;&nbsp;'
 		+ '<span class="delete_notes mt_delete_select">删除选中笔记</span>' + '</li>';
 
+/** 用于分页more的模板 */
+var moreTemplate = '<li class="online more">'
+		+ '<a>'
+		+ '<i class="fa fa-plus" title="online" rel="tooltip-bottom"></i> 加载更多...'
+		+ '</a>' + '</li>';
+
 /** 网页加载完,执行此方法 */
 $(function() {
 	// var userId = getCookie('userId');
 	// console.log(userId);
 
+	// 网页一加载就绑定笔记本当前页为0,以后每次加1
+	$(document).data('notebookPage', 0);
+
 	// 网页加载完成后,立即读取笔记本列表
-	loadNotebooks();
+	// loadNotebooks();
+	loadPageNotebooks();
 	// 点击笔记本的li加载该笔记本中的笔记列表,如果列表为空,则可以删除,显示删除按钮,如果不为空,则不能删除,不显示删除按钮
 	$('#notebook-list ul').empty().on('click', '.notebook', loadNotes);
+	// 点击笔记本的加载更多显示下一页
+	$('#notebook-list ul').on('click', '.more', loadPageNotebooks);
 	// 双击笔记本的li弹出重命名框
 	$('#notebook-list ul').on('dblclick', '.notebook', alertRenameNotebook);
 	// 点击笔记本上的删除按钮,弹出对话框
 	$('#notebook-list ul').on('click', '.btn_delete', alertDeleteNotebook);
+	// 点击导出笔记信息, 将下载所有笔记本及其中笔记的信息, Excel格式
+	$('#notebook-list').on('click', '.download_notebooks', downloadNotebooks);
 
 	// 点击笔记li读取笔记内容
 	$('#note-list ul').empty().on('click', '.note', loadNoteContents);
@@ -108,6 +124,55 @@ $(function() {
 	// 开启心跳检测,保持与服务器的通信
 	startHeartBeat();
 });
+
+/** 分页加载笔记本列表 */
+function loadPageNotebooks() {
+	var notebookPage = $(document).data('notebookPage');
+	var userId = getCookie('userId');
+	// 从服务器上获取数据
+	var url = 'notebook/page.do';
+	var data = {
+		userId : userId,
+		page : notebookPage
+	};
+	$.getJSON(url, data, function(result) {
+		console.log(result);
+		if (result.state == SUCCESS) {
+			var notebooks = result.data;
+			showPageNotebooks(notebooks, notebookPage);
+			$(document).data('notebookPage', notebookPage + 1);
+		} else {
+			alert(result.message);
+		}
+	});
+}
+
+/** 显示笔记本列表 */
+function showPageNotebooks(notebooks, page) {
+	var ul = $('#notebook-list ul');
+	if (page == 0) {
+		ul.empty(); // 第一页,清空列表
+	} else {
+		// 删除more
+		ul.find('.more').remove();
+	}
+	for (var i = 0; i < notebooks.length; i++) {
+		var notebook = notebooks[i];
+		var li = $(notebookTemplate.replace('#[name]', notebook.name));
+		li.data('notebookId', notebook.id).data('name', notebook.name);
+		ul.append(li);
+	}
+	if (notebooks.length == notebookPageSize) {
+		ul.append(moreTemplate);
+	}
+}
+
+/** 从服务器下载全部笔记本及其中的笔记信息 */
+function downloadNotebooks() {
+	var userId = getCookie('userId');
+	var url = 'notebook/downloadNotebooks.do?userId=' + userId;
+	location.href = url;
+}
 
 /** 点击下载按钮,将笔记下载到本地 */
 function downloadNote() {

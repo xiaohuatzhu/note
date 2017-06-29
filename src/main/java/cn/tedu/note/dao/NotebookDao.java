@@ -25,4 +25,7 @@ public interface NotebookDao extends Serializable {
 	int updateNotebook(Notebook notebook);
 
 	int deleteNotebookByNotebookId(String notebookId);
+
+	List<Map<String, Object>> findNotebooksByPage(@Param("userId") String userId, @Param("start") int start,
+			@Param("pageSize") int pageSize, @Param("table") String table);
 }

@@ -38,6 +38,18 @@
 		)
 	</insert>
 
+	<select id="findNotebooksByPage" resultType="map">
+		SELECT
+		CN_NOTEBOOK_ID AS id,
+		CN_NOTEBOOK_NAME AS name
+		FROM ${table}
+		WHERE
+		CN_USER_ID=#{userId}
+		ORDER BY CN_NOTEBOOK_CREATETIME DESC
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
 	<select id="findNotebooksByUserId" parameterType="string"
 		resultType="map">
 		SELECT
@@ -51,6 +63,7 @@
 		CN_NOTEBOOK_CREATETIME
 		DESC
 	</select>
+
 	<select id="findNotebookByNotebookId" parameterType="string"
 		resultMap="NotebookMap">
 		SELECT

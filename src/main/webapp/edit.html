@@ -23,14 +23,14 @@
 <link href="styles/umeditor.min.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
-.upload_note, .delete_notes {
+.upload_note, .delete_notes, .download_notebooks {
 	font-size: 14px;
 	text-decoration: underline;
 	cursor: pointer;
 	text-align: center;
 }
 
-.upload_note:HOVER, .delete_notes:HOVER {
+.download_notebooks:HOVER, .upload_note:HOVER, .delete_notes:HOVER {
 	color: blue;
 	font-weight: bold;
 }
@@ -70,7 +70,10 @@
 		<div class="col-xs-2" style='padding: 0;' id='notebook-list'>
 			<!-- side-right -->
 			<div class="pc_top_first">
-				<h3>全部笔记本</h3>
+				<h3>
+					全部笔记本&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+						class="download_notebooks">导出信息(Excel)</span>
+				</h3>
 				<button type="button" class="btn btn-default btn-xs btn_plus"
 					id='add_notebook'>
 					<i class="fa fa-plus"></i>

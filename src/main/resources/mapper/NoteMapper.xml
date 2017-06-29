@@ -146,4 +146,15 @@
 		AND CN_NOTE_STATUS_ID='1'
 	</select>
 
+	<select id="findAllByNotebookId" parameterType="string"
+		resultMap="NoteMap">
+		SELECT *
+		FROM
+		CN_NOTE
+		WHERE
+		CN_NOTEBOOK_ID=#{notebookId} AND
+		CN_NOTE_STATUS_ID='1'
+		ORDER BY
+		CN_NOTE_LAST_MODIFY_TIME DESC
+	</select>
 </mapper>

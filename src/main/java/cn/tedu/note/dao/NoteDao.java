@@ -12,6 +12,7 @@ public interface NoteDao extends Serializable {
 
 	List<Map<String, Object>> findNotesByNotebookId(String notebookId);
 
+	List<Note> findAllByNotebookId(String notebookId);
 	List<Map<String, Object>> findDeleteNotes(String userId);
 
 	String findNoteBodyByNoteId(String noteId);
